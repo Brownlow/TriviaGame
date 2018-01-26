@@ -172,7 +172,7 @@ $('#start-button').on('click', function(){
 
 function setTimer(){
 	var stopwatch = {
-		time: 10,
+		time: 5,
 	}
 
 	intervalId = setInterval(countDown, 1000);
@@ -188,12 +188,20 @@ function setTimer(){
 			$('#memesAndPics').css('display', 'block');
 			$('#memesAndPics').append('<img id="timesUp">');
 			$('#timesUp').attr('src', questions[qCounter].wrongAnswerImage);
-			$('#memesAndPics').append('TIMES UP B%#$*');
-
+			$('#memesAndPics').append('<div class="memeMessage">');
+			$('.memeMessage').html('TIMES UP')
 			qCounter++;
+			$('.' + questions[qCounter - 1].title).css('display','none');
+
+			
 			noAnswer++;
 
 			setTimeout(startGame, 3000);
+
+			if (qCounter === questions.length){
+
+				gameOver();
+			}
 		}
 	}
 }
@@ -228,11 +236,9 @@ function buildQuestion(){
         qAndA.append(answer);
         
     }
-    console.log(qCounter);
     $('#questionsAndAnswers').append(qAndA);
-    $('.question1').css('display','block');
-
-
+    $('.' + questions[qCounter].title).css('display','block');
+  
 }
 
 function answerCorrect(){
@@ -253,6 +259,17 @@ function answerWrong(){
 	answerWrong++;
 }
 
+function gameOver(){
+	$('#questionsAndAnswers').css('display', 'none');
+	$('#memesAndPics').css('display', 'none');
+	$('#gameOver').css('display', 'block');
+	$('#gameOver').append('<div>GAME OVER</div>');
+	$('#gameOver').append('<div>Correct Answers:' + answerCorrect + '</div>');
+	$('#gameOver').append('<div>Wrong Answers:' + answerWrong + '</div>');
+	$('#gameOver').append('<div>Unanswered:' + noAnswer + '</div>');
+
+}
+
 
 
 $(document).on('click', '.answers', function(){
@@ -261,25 +278,14 @@ $(document).on('click', '.answers', function(){
 	console.log(result); // <--------- WTF!
 
 	if(result === true){
-		qCounter++;
+		
 		answerCorrect();
 		console.log('yup');
 	} else if(result !== true){
-		qCounter++;
+		
 		answerWrong();
 		console.log('nope');
 	}
 })
-
-
-
-
-// End game when all questions are done
-if (qCounter === questions.length){
-
-	console.log('game over');
-}
-
-
 
 

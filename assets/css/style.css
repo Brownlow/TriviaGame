@@ -55,6 +55,19 @@ h3{
 	margin:0 auto;
 }
 
+#gameOver{
+	background-color:rgba(225, 225, 225, .3);
+	border:1px solid #999;
+	border-radius:4px;
+	width:500px;
+	margin:0 auto;
+	text-align:center;
+	display:none;
+	padding:20px;
+	margin-top:60px;
+	color:#fff;
+}
+
 .answers{
 	background-color:rgba(225, 225, 225, .3);
 	border:1px solid #999;
