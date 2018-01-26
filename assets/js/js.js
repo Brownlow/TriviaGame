@@ -26,8 +26,8 @@ questions = [
 			}
 		], 
 		"correctAnswer": "1",
-		"rightAnswerImage": "/images/bb-amc.jpg",
-		"wrongAnswerImage": "/images/wrong.gif",
+		"rightAnswerImage": "../assets/images/bb-amc.jpg",
+		"wrongAnswerImage": "https://media.giphy.com/media/knXVxRDG8SP1C/giphy.gif",
 	},
 	{
 		"title": "question2",
@@ -185,13 +185,22 @@ function setTimer(){
 		if(stopwatch.time === 0){
 			clearInterval(intervalId);
 			$('#questionsAndAnswers').css('display', 'none');
-			$('#memesAndPics').css('display', 'block')
+			$('#memesAndPics').css('display', 'block');
+			$('#memesAndPics').append('<img id="timesUp">');
+			$('#timesUp').attr('src', questions[qCounter].wrongAnswerImage);
+			$('#memesAndPics').append('TIMES UP B%#$*');
+
+			qCounter++;
+			noAnswer++;
+
+			setTimeout(startGame, 3000);
 		}
 	}
 }
 
 function startGame(){
 
+	$('#memesAndPics').css('display', 'none');
 
 	// remove start game button
 	$('#start-button').css('display', 'none');
@@ -217,12 +226,12 @@ function buildQuestion(){
         answer.text(questions[qCounter].answers[i].answer)
         answer.attr('data-value', questions[qCounter].answers[i].dataValue);
         qAndA.append(answer);
+        
     }
+    console.log(qCounter);
     $('#questionsAndAnswers').append(qAndA);
     $('.question1').css('display','block');
 
-    return qAndA;
-    return answer;
 
 }
 
