@@ -224,6 +224,8 @@ function buildQuestion(){
 	$('.question1').css('display','block');
 
 
+
+
 }
 
 
@@ -234,59 +236,37 @@ $('.answers').on('click', function(){
 	if(questions[qCounter].answers.dataValue === true){
 		qCounter++;
 		answerCorrect();
+		console.log('yup');
 	} else{
 		qCounter++;
 		answerWrong();
+		console.log('nope');
 	}
 })
 
 
 function answerCorrect(){
 
+	$('#questionsAndAnswers').css('display', 'none');
+ 	$('#memesAndPics').css('display', 'block');
+ 	$('#memesAndPics').append(questions[qCounter].rightAnswerImage);
+ 	answerCorrect++;
 }
 
 function answerWrong(){
 	
+	$('#questionsAndAnswers').css('display', 'none');
+	$('#memesAndPics').css('display', 'block');
+	$('#memesAndPics').append(questions[qCounter].wrongAnswerImage);
+	answerWrong++;
 }
 
 
 // End game when all questions are done
 if (qCounter === questions.length){
-			console.log('game over');
-		}
 
-
-
-
-	
-
-	
-
-	 // if(answerCorrect === false){
-
-	 // 	$('#questionsAndAnswers').css('display', 'none');
-	 // 	$('#memesAndPics').css('display', 'block');
-	 // 	$('#memesAndPics').append(questions[0].wrongAnswerImage);
-	 // 	answerWrong++;
-
-
-	 // } else if (answerCorrect === true || setTimer.time > 0){
-
-	 // 	$('#questionsAndAnswers').css('display', 'none');
-	 // 	$('#memesAndPics').css('display', 'block');
-	 // 	$('#memesAndPics').append(questions[0].rightAnswerImage);
-	 // 	answerCorrect++;
-
-	 // } else{
-
-	 // 	$('#questionsAndAnswers').css('display', 'none');
-	 // 	$('#memesAndPics').css('display', 'block');
-	 // 	$('#memesAndPics').append(questions[0].wrongAnswerImage);
-	 // 	noAnswer++;
-	 // }
-
-
-
+	console.log('game over');
+}
 
 
 
