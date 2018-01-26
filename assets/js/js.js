@@ -157,6 +157,7 @@ var noAnswer = 0;
 var stopwatch = {};
 var qCounter = 0;
 var answer;
+var qAndA;
 
 
 
@@ -220,22 +221,10 @@ function buildQuestion(){
     $('#questionsAndAnswers').append(qAndA);
     $('.question1').css('display','block');
 
+    return qAndA;
+    return answer;
+
 }
-
-
-$('.answers').on('click', function(){
-	
-
-	if(this.dataValue === true){
-		qCounter++;
-		answerCorrect();
-		console.log('yup');
-	} else{
-		qCounter++;
-		answerWrong();
-		console.log('nope');
-	}
-})
 
 function answerCorrect(){
 
@@ -251,10 +240,29 @@ function answerWrong(){
 	$('#questionsAndAnswers').css('display', 'none');
 	$('#memesAndPics').css('display', 'block');
 	$('#memesAndPics').append(questions[qCounter].wrongAnswerImage);
-	$('#memesAndPics').append(questions[qCounter].wrongAnswerImage);
 	$('#memesAndPics').append('WRONG ANSWER');
 	answerWrong++;
 }
+
+
+
+$(document).on('click', '.answers', function(){
+	
+	var result = this.dataset.value;
+	console.log(result); // <--------- WTF!
+
+	if(result === true){
+		qCounter++;
+		answerCorrect();
+		console.log('yup');
+	} else if(result !== true){
+		qCounter++;
+		answerWrong();
+		console.log('nope');
+	}
+})
+
+
 
 
 // End game when all questions are done
