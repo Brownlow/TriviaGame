@@ -25,6 +25,7 @@ questions = [
 				"dataValue": false
 			}
 		], 
+		"correctAnswer": "1",
 		"rightAnswerImage": "/images/bb-amc.jpg",
 		"wrongAnswerImage": "/images/wrong.gif",
 	},
@@ -53,8 +54,9 @@ questions = [
 				"dataValue": true
 			}
 		], 
-		"rightAnswerImage": "",
-		"wrongAnswerImage": "",
+		"correctAnswer": "4",
+		"rightAnswerImage": "https://media.giphy.com/media/osVVO6nubVPCo/giphy.gif",
+		"wrongAnswerImage": "https://media.giphy.com/media/knXVxRDG8SP1C/giphy.gif",
 	},
 	{
 		"title": "question3",
@@ -81,8 +83,9 @@ questions = [
 				"dataValue": false
 			}
 		], 
-		"rightAnswerImage": "",
-		"wrongAnswerImage": "",
+		"correctAnswer": "2",
+		"rightAnswerImage": "https://media.giphy.com/media/yE72eDy7lj3JS/giphy.gif",
+		"wrongAnswerImage": "https://media.giphy.com/media/N9sS2pprB7V2E/giphy.gif",
 	},
 	{
 		"title": "question4",
@@ -109,8 +112,9 @@ questions = [
 				"dataValue": false
 			}
 		],  
-		"rightAnswerImage": "",
-		"wrongAnswerImage": "",
+		"correctAnswer": "2",
+		"rightAnswerImage": "https://media.giphy.com/media/PZCQvgafIrYPK/giphy.gif",
+		"wrongAnswerImage": "https://media.giphy.com/media/aN9wwG9wTwtk4/giphy.gif",
 	},
 	{
 		"title": "question5",
@@ -133,12 +137,13 @@ questions = [
 			},
 			{
 				"number": "4",
-				"answer": "Shrooms",
+				"answer": "He Sold Meth",
 				"dataValue": false
 			}
 		], 
-		"rightAnswerImage": "",
-		"wrongAnswerImage": "",
+		"correctAnswer": "2",
+		"rightAnswerImage": "https://media.giphy.com/media/12Z4v34UXpOxR6/giphy.gif",
+		"wrongAnswerImage": "https://media.giphy.com/media/r4luGBzBuk1O/giphy.gif",
 	},
 ];
 
@@ -151,6 +156,7 @@ var answerWrong = 0;
 var noAnswer = 0;
 var stopwatch = {};
 var qCounter = 0;
+var answer;
 
 
 
@@ -165,7 +171,7 @@ $('#start-button').on('click', function(){
 
 function setTimer(){
 	var stopwatch = {
-		time: 30,
+		time: 10,
 	}
 
 	intervalId = setInterval(countDown, 1000);
@@ -178,15 +184,10 @@ function setTimer(){
 		if(stopwatch.time === 0){
 			clearInterval(intervalId);
 			$('#questionsAndAnswers').css('display', 'none');
-			$('#memes').css('display', 'block')
+			$('#memesAndPics').css('display', 'block')
 		}
 	}
-
-	
 }
-
-
-
 
 function startGame(){
 
@@ -202,38 +203,30 @@ function startGame(){
 	buildQuestion();
 }
 
+
 function buildQuestion(){
-
-	var qAndA = $('<div id="qAndA">');
-	qAndA.addClass(questions[qCounter].title);
-	// Add Question
-	qAndA.append('<h3>' + questions[qCounter].question + '</h3>');
-	// Add Question 1
-	qAndA.append('<div class="answers ' + questions[qCounter].answers[0].number + '">' + questions[qCounter].answers[0].answer + '</div>');
-	$('.1').attr('data-value', questions[qCounter].answers[0].dataValue);
-	// Add Question 2
-	qAndA.append('<div class="answers ' + questions[qCounter].answers[1].number + '">' + questions[qCounter].answers[1].answer + '</div>');
-	$('.2').attr('data-value', questions[qCounter].answers[1].dataValue);
-	// Add Question 3
-	qAndA.append('<div class="answers ' + questions[qCounter].answers[2].number + '">' + questions[qCounter].answers[2].answer + '</div>');
-	$('.3').attr('data-value', questions[qCounter].answers[2].dataValue);
-	// Add Question 4
-	qAndA.append('<div class="answers ' + questions[qCounter].answers[3].number + '">' + questions[qCounter].answers[3].answer + '</div>');
-	$('.4').attr('data-value', questions[qCounter].answers[3].dataValue);
-	$('#questionsAndAnswers').append(qAndA);
-	$('.question1').css('display','block');
-
-
-
+    var qAndA = $('<div id="qAndA">');
+    qAndA.addClass(questions[qCounter].title);
+    // Add Question
+    qAndA.append('<h3>' + questions[qCounter].question + '</h3>');
+    // Add all Questions
+    for(var i = 0; i < 4; i++){
+        var answer = $('<div>');
+        answer.addClass(`answers ${i + 1}`);
+        answer.text(questions[qCounter].answers[i].answer)
+        answer.attr('data-value', questions[qCounter].answers[i].dataValue);
+        qAndA.append(answer);
+    }
+    $('#questionsAndAnswers').append(qAndA);
+    $('.question1').css('display','block');
 
 }
 
 
-
-
 $('.answers').on('click', function(){
+	
 
-	if(questions[qCounter].answers.dataValue === true){
+	if(this.dataValue === true){
 		qCounter++;
 		answerCorrect();
 		console.log('yup');
@@ -244,12 +237,12 @@ $('.answers').on('click', function(){
 	}
 })
 
-
 function answerCorrect(){
 
 	$('#questionsAndAnswers').css('display', 'none');
  	$('#memesAndPics').css('display', 'block');
  	$('#memesAndPics').append(questions[qCounter].rightAnswerImage);
+ 	$('#memesAndPics').append('CORRECT ANSWER');
  	answerCorrect++;
 }
 
@@ -258,6 +251,8 @@ function answerWrong(){
 	$('#questionsAndAnswers').css('display', 'none');
 	$('#memesAndPics').css('display', 'block');
 	$('#memesAndPics').append(questions[qCounter].wrongAnswerImage);
+	$('#memesAndPics').append(questions[qCounter].wrongAnswerImage);
+	$('#memesAndPics').append('WRONG ANSWER');
 	answerWrong++;
 }
 
@@ -267,6 +262,7 @@ if (qCounter === questions.length){
 
 	console.log('game over');
 }
+
 
 
 
