@@ -26,7 +26,7 @@ questions = [
 			}
 		], 
 		"correctAnswer": "1",
-		"rightAnswerImage": "../assets/images/bb-amc.jpg",
+		"rightAnswerImage": "https://media.giphy.com/media/knXVxRDG8SP1C/giphy.gif",
 		"wrongAnswerImage": "https://media.giphy.com/media/knXVxRDG8SP1C/giphy.gif",
 	},
 	{
@@ -150,14 +150,15 @@ questions = [
 
 // Variables ---------------------------------------
 
-var intervalId;
-var answerCorrect = 0;
-var answerWrong = 0;
+var intervalId ;
+var correctAnswers = 0;
+var wrongAnswers = 0;
 var noAnswer = 0;
-var stopwatch = {};
+var stopwatch ;
 var qCounter = 0;
 var answer;
 var qAndA;
+var time = 5;
 
 
 
@@ -167,62 +168,95 @@ $('#start-button').on('click', function(){
 	startGame();
 })
 
+// Timer Functions -------------------------------------------------------
 
-// Set Up Timer ---------------------------------------
+function startCount() {
+  intervalId = setInterval(countDown, 1000);
+}
 
-function setTimer(){
-	var stopwatch = {
-		time: 5,
-	}
+function stopCount() {
 
-	intervalId = setInterval(countDown, 1000);
+  console.log("stopping");
+  clearInterval(intervalId);
 
-	function countDown(){
-		stopwatch.time --;
+}
 
-		$('#countDown').html(stopwatch.time);
+function resetCount(){
+	time = 5;
+}
 
-		if(stopwatch.time === 0){
-			clearInterval(intervalId);
-			$('#questionsAndAnswers').css('display', 'none');
-			$('#memesAndPics').css('display', 'block');
-			$('#memesAndPics').append('<img id="timesUp">');
-			$('#timesUp').attr('src', questions[qCounter].wrongAnswerImage);
-			$('#memesAndPics').append('<div class="memeMessage">');
-			$('.memeMessage').html('TIMES UP')
-			qCounter++;
-			$('.' + questions[qCounter - 1].title).css('display','none');
+function countDown(){
 
-			
-			noAnswer++;
+// Decrement stopwatch time
+time --;
 
-			setTimeout(startGame, 3000);
+// Display stopwatch in the dom
+$('#countDown').html(time);
 
-			if (qCounter === questions.length){
 
-				gameOver();
-			}
+	if(time === 0){
+
+		clearInterval(intervalId);
+		$('#questionsAndAnswers').css('display', 'none');
+		$('#memesAndPics').css('display', 'block');
+		$('#memesAndPics').append('<img id="timesUp">');
+		$('#timesUp').attr('src', questions[qCounter].wrongAnswerImage);
+		$('#memesAndPics').append('<div class="memeMessage">');
+		$('.memeMessage').text('CORRECT ANSWER: ' + questions[qCounter].answers.answer);
+
+		// Increment Question Counter
+		qCounter++;
+	
+		// Hide previous question
+		$('.' + questions[qCounter - 1].title).css('display','none');
+	
+		// Increment unansweredquestions
+		noAnswer++;
+	
+		// Delay screen on 
+		setTimeout(startGame, 3000);
+
+		resetCount();
+
+		if (qCounter === questions.length){
+			console.log('last question')
+			gameOver();
 		}
 	}
 }
 
+
+function timeDelay(){
+
+	// Delay screen on 
+    setTimeout(startGame, 1000);
+}
+
+// Start Game -----------------------------------------
+
 function startGame(){
 
+	// Hide visible memes
 	$('#memesAndPics').css('display', 'none');
 
 	// remove start game button
 	$('#start-button').css('display', 'none');
-	$('#questionsAndAnswers').css('display', 'block');
 
-	// Show timer and start
-	setTimer();
+	// Show questions and answers
+	$('#questionsAndAnswers').css('display', 'block');
 
 	/// Load Question
 	buildQuestion();
+
 }
 
+// Build Questions -----------------------------------------
 
 function buildQuestion(){
+
+	// Show timer and start
+	startCount();
+
     var qAndA = $('<div id="qAndA">');
     qAndA.addClass(questions[qCounter].title);
     // Add Question
@@ -241,51 +275,117 @@ function buildQuestion(){
   
 }
 
+// Answer Questions ---------------------------------------------------------
+
+// Click to choose answer
+$(document).on('click', '.answers', function(){
+	
+	var result = this.dataset.value;
+	console.log(result); 
+
+	if(result === 'true'){
+		
+		answerCorrect();
+		console.log('right answer');
+
+	} else {
+		
+		answerWrong();
+		console.log('wrong answer');
+
+		clearInterval(intervalId);
+		$('#countDown').html(' ');
+
+	}
+})
+
 function answerCorrect(){
+
+	stopCount();
 
 	$('#questionsAndAnswers').css('display', 'none');
  	$('#memesAndPics').css('display', 'block');
- 	$('#memesAndPics').append(questions[qCounter].rightAnswerImage);
- 	$('#memesAndPics').append('CORRECT ANSWER');
- 	answerCorrect++;
+ 	var memes = $('<img id="timesUp">');
+ 	$('#memesAndPics').append(memes);
+	memes.attr('src', questions[qCounter].rightAnswerImage);
+ 	$('#memesAndPics').html('CORRECT ANSWER');
+ 	
+
+ 	correctAnswers++;
+
+ 	// Increment Question Counter
+	qCounter++;
+
+	// Hide previous question
+	$('.' + questions[qCounter - 1].title).css('display','none');
+
+	// Delay screen on 
+	setTimeout(startGame, 3000);
+
+	isGameOver();
+
+	resetCount();
+
 }
 
 function answerWrong(){
+
+	stopCount();
 	
 	$('#questionsAndAnswers').css('display', 'none');
 	$('#memesAndPics').css('display', 'block');
-	$('#memesAndPics').append(questions[qCounter].wrongAnswerImage);
-	$('#memesAndPics').append('WRONG ANSWER');
-	answerWrong++;
+	var answerImage = $('<img>');
+	$('#memesAndPics').append(answerImage);
+	answerImage.attr('src', questions[qCounter].wrongAnswerImage);
+	$('#memesAndPics').html('WRONG ANSWER');
+
+	wrongAnswers++;
+
+	// Increment Question Counter
+	qCounter++;
+
+	// Hide previous question
+	$('.' + questions[qCounter - 1].title).css('display','none');
+
+	// Delay screen on 
+	setTimeout(startGame, 3000);
+
+	isGameOver();
+
+	resetCount();
+
 }
+
+
+// Game Over --------------------------------------------------------
+
+
+function isGameOver(){
+
+	// End game when counter gets through all questions
+		if (qCounter === questions.length){
+			console.log('last question')
+			gameOver();
+		}
+}
+
 
 function gameOver(){
 	$('#questionsAndAnswers').css('display', 'none');
 	$('#memesAndPics').css('display', 'none');
+	$('#countDown').css('display', 'none');
 	$('#gameOver').css('display', 'block');
 	$('#gameOver').append('<div>GAME OVER</div>');
-	$('#gameOver').append('<div>Correct Answers:' + answerCorrect + '</div>');
-	$('#gameOver').append('<div>Wrong Answers:' + answerWrong + '</div>');
+	$('#gameOver').append('<div>Correct Answers:' + correctAnswers + '</div>');
+	$('#gameOver').append('<div>Wrong Answers:' + wrongAnswers + '</div>');
 	$('#gameOver').append('<div>Unanswered:' + noAnswer + '</div>');
+
+	stopCount();
 
 }
 
 
 
-$(document).on('click', '.answers', function(){
-	
-	var result = this.dataset.value;
-	console.log(result); // <--------- WTF!
 
-	if(result === true){
-		
-		answerCorrect();
-		console.log('yup');
-	} else if(result !== true){
-		
-		answerWrong();
-		console.log('nope');
-	}
-})
 
 
